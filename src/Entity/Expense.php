@@ -20,10 +20,13 @@ class Expense
     private ?string $description = null;
 
     #[ORM\Column(length: 50)]
-    private ?string $type = null;
+    private ?string $category = null;
 
     #[ORM\Column]
     private ?\DateTime $date = null;
+
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $mainType = null;
 
     public function getId(): ?int
     {
@@ -54,14 +57,14 @@ class Expense
         return $this;
     }
 
-    public function getType(): ?string
+    public function getCategory(): ?string
     {
-        return $this->type;
+        return $this->category;
     }
 
-    public function setType(string $type): static
+    public function setCategory(string $category): static
     {
-        $this->type = $type;
+        $this->category = $category;
 
         return $this;
     }
@@ -74,6 +77,18 @@ class Expense
     public function setDate(\DateTime $date): static
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getMainType(): ?string
+    {
+        return $this->mainType;
+    }
+
+    public function setMainType(string $mainType): static
+    {
+        $this->mainType = $mainType;
 
         return $this;
     }

@@ -1,39 +1,125 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1> Budget App </h1>
-    <h2>Recent Transactions</h2>
-    <table border="1" cellspacing="0" cellpadding="8">
-        <thead>
-        <tr>
-            <th>#</th>
-            <th>Type</th>
-            <th>Category</th>
-            <th>Amount</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for transaction in recentTransactions %}
-            <tr>
-                <td>{{ loop.index }}</td>
-                <td>
-                    {% if transaction.Maintype == 'income' %}
-                        ➕
-                    {% elseif transaction.Maintype == 'expense' %}
-                        ➖
-                    {% else %}
-                        ❔
-                    {% endif %}
-                </td>
-                <td>{{ transaction.description }}</td>
-                <td>{{ transaction.amount }} €</td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">No transactions yet.</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            padding: 40px;
+            background-color: #f9f9f9;
+        }
 
+        .budget-box {
+            max-width: 600px;
+            width: 100%;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+            background-color: #ffffff;
+        }
+
+        .budget-box h2 {
+            margin: 0 0 15px;
+            font-size: 20px;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th {
+            text-align: left;
+            color: #666;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        td {
+            padding: 8px 0;
+            color: #111;
+            vertical-align: middle;
+        }
+
+        tr + tr td {
+            border-top: 1px solid #f3f3f3;
+        }
+
+        .tag {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .tag.income {
+            background-color: #d4f4dd;
+            color: #2e7d32;
+        }
+
+        .tag.expense {
+            background-color: #fdecea;
+            color: #c62828;
+        }
+
+        .tag.unknown {
+            background-color: #eee;
+            color: #777;
+        }
+
+        .filters {
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: #555;
+        }
+    </style>
+
+    <div class="budget-box">
+        <h2>Recent Transactions</h2>
+
+        {# Placeholder for future filters #}
+        <div class="filters">
+            Showing last {{ recentTransactions|length }} transactions
+        </div>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for transaction in recentTransactions %}
+                <tr>
+                    <td>
+                        {% if transaction.mainType == 'income' %}
+                        <a href="{{ path('income_show', {id: transaction.sourceId}) }}">
+                            <span class="tag income">Income</span>
+                        </a>
+                        {% elseif transaction.mainType == 'expense' %}
+                        <a href="{{ path('expense_show', {id: transaction.sourceId}) }}">
+                            <span class="tag expense">Expense</span>
+                        </a>
+                        {% else %}
+                            <span class="tag unknown">Not classified</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ transaction.description }}</td>
+                    <td>{{ transaction.amount }} €</td>
+                    <td>{{ transaction.date|date('Y-m-d') }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">No transactions yet.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}

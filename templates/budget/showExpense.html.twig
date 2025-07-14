@@ -10,7 +10,7 @@
             padding-top: 50px;
         }
 
-        .income-box {
+        .expense-box {
             max-width: 500px;
             width: 100%;
             border: 1px solid #e0e0e0;
@@ -20,7 +20,7 @@
             background-color: #ffffff;
         }
 
-        .income-box h1 {
+        .expense-box h1 {
             text-align: center;
             margin-bottom: 20px;
             font-size: 24px;
@@ -49,25 +49,25 @@
         }
     </style>
 
-    <div class="income-box">
-        <h1>Income</h1>
+    <div class="expense-box">
+        <h1>Expense</h1>
         <table>
             <tbody>
             <tr>
                 <th>Amount</th>
-                <td>{{ income.amount }} €</td>
+                <td>{{ expense.amount }} €</td>
             </tr>
             <tr>
                 <th>Description</th>
-                <td>{{ income.description }}</td>
+                <td>{{ expense.description }}</td>
             </tr>
             <tr>
                 <th>Type</th>
-                <td>{{ income.category }}</td>
+                <td>{{ expense.category }}</td>
             </tr>
             <tr>
                 <th>Date</th>
-                <td>{{ income.date|date('Y-m-d') }}</td>
+                <td>{{ expense.date|date('Y-m-d') }}</td>
             </tr>
             </tbody>
         </table>

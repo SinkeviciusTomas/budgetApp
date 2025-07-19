@@ -35,21 +35,24 @@
         th {
             text-align: left;
             color: #666;
-            padding: 10px 0;
-            width: 35%;
+            padding: 10px;
+            width: 40%;
         }
 
         td {
-            padding: 10px 0;
+            text-align: left;
+            padding: 10px;
             color: #111;
         }
 
-        tr + tr td, tr + tr th {
+       tr + tr td, tr + tr th {
             border-top: 1px solid #eee;
         }
     </style>
 
     <div class="income-box">
+        <a href="{{ path('budget_main') }}" style="text-decoration: none; font-size: 30px; color: #111;">←</a>
+
         <h1>Income</h1>
         <table>
             <tbody>

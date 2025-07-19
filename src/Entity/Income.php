@@ -4,16 +4,21 @@ namespace App\Entity;
 
 use App\Repository\IncomeRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: IncomeRepository::class)]
 class Income
 {
+    // TODO: Add validators to entities
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank]
+    #[Assert\Positive]
+    #[Assert\Type("integer")]
     private ?float $amount = null;
 
     #[ORM\Column(length: 128, nullable: true)]
@@ -25,7 +30,7 @@ class Income
     #[ORM\Column]
     private ?\DateTime $date = null;
 
-    #[ORM\Column(length: 20, nullable: true)]
+    #[ORM\Column(length: 20)]
     private ?string $mainType = null;
 
 

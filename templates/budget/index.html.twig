@@ -4,11 +4,15 @@
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
-            padding: 40px;
+            padding: 30px;
             background-color: #f9f9f9;
+            display: compact;
+            flex-direction: row-reverse;
+            align-items: center;
+            gap: 30px;
         }
 
-        .budget-box {
+        .budget-box, .form-box {
             max-width: 600px;
             width: 100%;
             border: 1px solid #e0e0e0;
@@ -18,10 +22,41 @@
             background-color: #ffffff;
         }
 
-        .budget-box h2 {
+        .budget-box h2, .form-box h2 {
             margin: 0 0 15px;
             font-size: 20px;
             color: #333;
+            text-align: center;
+        }
+
+        form div {
+            margin-bottom: 12px;
+        }
+
+        form label {
+            font-weight: 500;
+            display: block;
+            margin-bottom: 4px;
+            color: #444;
+        }
+
+        form input, form select {
+            width: 50%;
+            padding: 6px 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        form button {
+            margin-top: 10px;
+            padding: 8px 12px;
+            font-size: 14px;
+            background-color: #b57575;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
         }
 
         table {
@@ -77,14 +112,23 @@
         }
     </style>
 
+    <div class="form-box">
+        <h2>Add Transaction</h2>
+        {{ form_start(form) }}
+        {{ form_row(form.mainType) }}
+        {{ form_row(form.category) }}
+        {{ form_row(form.amount) }}
+        {{ form_row(form.description) }}
+        {{ form_row(form.date) }}
+        <button type="submit">Add</button>
+        {{ form_end(form) }}
+    </div>
+
     <div class="budget-box">
         <h2>Recent Transactions</h2>
-
-        {# Placeholder for future filters #}
         <div class="filters">
             Showing last {{ recentTransactions|length }} transactions
         </div>
-
         <table>
             <thead>
             <tr>
@@ -99,18 +143,18 @@
                 <tr>
                     <td>
                         {% if transaction.mainType == 'income' %}
-                        <a href="{{ path('income_show', {id: transaction.sourceId}) }}">
-                            <span class="tag income">Income</span>
-                        </a>
+                            <a href="{{ path('income_show', {id: transaction.sourceId}) }}">
+                                <span class="tag income">Income</span>
+                            </a>
                         {% elseif transaction.mainType == 'expense' %}
-                        <a href="{{ path('expense_show', {id: transaction.sourceId}) }}">
-                            <span class="tag expense">Expense</span>
-                        </a>
+                            <a href="{{ path('expense_show', {id: transaction.sourceId}) }}">
+                                <span class="tag expense">Expense</span>
+                            </a>
                         {% else %}
                             <span class="tag unknown">Not classified</span>
                         {% endif %}
                     </td>
-                    <td>{{ transaction.description }}</td>
+                    <td>{{ transaction.category }}</td>
                     <td>{{ transaction.amount }} €</td>
                     <td>{{ transaction.date|date('Y-m-d') }}</td>
                 </tr>

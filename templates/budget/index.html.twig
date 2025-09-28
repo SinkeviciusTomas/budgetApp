@@ -136,6 +136,7 @@
                 <th>Description</th>
                 <th>Amount</th>
                 <th>Date</th>
+                <th>Info</th>
             </tr>
             </thead>
             <tbody>
@@ -143,20 +144,25 @@
                 <tr>
                     <td>
                         {% if transaction.mainType == 'income' %}
-                            <a href="{{ path('income_show', {id: transaction.sourceId}) }}">
                                 <span class="tag income">Income</span>
-                            </a>
                         {% elseif transaction.mainType == 'expense' %}
-                            <a href="{{ path('expense_show', {id: transaction.sourceId}) }}">
                                 <span class="tag expense">Expense</span>
-                            </a>
                         {% else %}
-                            <span class="tag unknown">Not classified</span>
+                                <span class="tag unknown">Not classified</span>
                         {% endif %}
                     </td>
                     <td>{{ transaction.category }}</td>
                     <td>{{ transaction.amount }} €</td>
                     <td>{{ transaction.date|date('Y-m-d') }}</td>
+                    <td>
+                        {% if transaction.mainType == 'income' %}
+                            <a href="{{ path('income_show', { id: transaction.sourceId }) }}">View</a>
+                        {% elseif transaction.mainType == 'expense' %}
+                            <a href="{{ path('expense_show', { id: transaction.sourceId }) }}">View</a>
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
                 </tr>
             {% else %}
                 <tr>

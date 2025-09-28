@@ -7,17 +7,20 @@ use Symfony\Component\Validator\Constraints as Assert;
 class TransactionInput
 {
     #[Assert\NotBlank]
+    #[Assert\Type('float')]
+    public float $amount;
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     public string $mainType;
 
     #[Assert\NotBlank]
-    #[Assert\Type('float')]
-    public float $amount;
+    #[Assert\Type('string')]
+    public string $category;
 
+    #[Assert\Type('string')]
     public ?string $description = null;
 
     #[Assert\NotBlank]
-    public string $category;
-
-    #[Assert\NotBlank]
+    #[Assert\Type(\DatetimeInterface::class)]
     public \DateTime $date;
 }

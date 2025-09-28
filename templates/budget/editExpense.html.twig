@@ -1,0 +1,113 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-top: 50px;
+            background-color: #f9f9f9;
+        }
+
+        .edit-box {
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            background-color: #ffffff;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            color: #666;
+            padding: 10px;
+            width: 35%;
+        }
+
+        td {
+            padding: 10px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .btn-submit {
+            margin-top: 20px;
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-submit:hover {
+            background-color: #45a049;
+        }
+    </style>
+
+    <div class="edit-box">
+        <div class="top-nav">
+            <a href="{{ path('budget_main') }}" style="text-decoration: none; font-size: 20px; color: #111;">←</a>
+            <a href="{{ cancelPath }}">Cancel</a>
+        </div>
+
+        <h1>Edit Expense</h1>
+
+        {{ form_start(form) }}
+        <table>
+            <tr>
+                <th>Amount</th>
+                <td>{{ form_row(form.amount) }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ form_row(form.description) }}</td>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td>{{ form_row(form.category) }}</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{{ form_row(form.date) }}</td>
+            </tr>
+        </table>
+
+        {{ form_rest(form) }}
+
+        <button type="submit" class="btn-submit">Save</button>
+        {{ form_end(form, { render_rest: false }) }}
+    </div>
+{% endblock %}

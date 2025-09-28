@@ -52,6 +52,11 @@
 
     <div class="expense-box">
         <a href="{{ path('budget_main') }}" style="text-decoration: none; font-size: 30px; color: #111;">←</a>
+        <a href="{{ path('transaction_edit', { id: transaction.SourceId, type: transaction.sourceTable }) }}"
+           style="float: right; padding: 10px; text-decoration: none; color: inherit;">
+            ✏️
+        </a>
+
         <h1>Expense</h1>
         <table>
             <tbody>

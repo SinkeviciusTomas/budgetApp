@@ -20,7 +20,6 @@ final class BudgetController extends AbstractController
     public function index(Request $request, EntityManagerInterface $em, TransactionRepository $transactionRepository): Response
     {
         $recentTransactions = $transactionRepository->recentTransactions(10);
-        $getCurrentMonthTotals = $transactionRepository->getCurrentMonthTotals();
 
         $transaction = new Transaction();
         $form = $this->createForm(transactionType::class, $transaction);
@@ -37,7 +36,6 @@ final class BudgetController extends AbstractController
         return $this->render('budget/index.html.twig', [
             'recentTransactions' => $recentTransactions,
             'form' => $form->createView(),
-            'getCurrentMonthTotals' => $getCurrentMonthTotals,
         ]);
     }
     #[Route('/transaction/{id<\d+>}', name: 'transaction_show')]

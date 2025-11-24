@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\TransactionRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TransactionRepository::class)]
@@ -18,6 +19,7 @@ class Transaction
     #[ORM\Column(length: 20)]
     #[Assert\Type('string')]
     #[Assert\NotBlank(message: 'Please choose the transaction type')]
+    #[SerializedName("transaction type")]
     private ?string $mainType = null;
 
     #[ORM\Column(length: 50)]

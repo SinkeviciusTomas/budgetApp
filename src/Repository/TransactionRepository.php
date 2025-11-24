@@ -25,6 +25,14 @@ class TransactionRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    public function findAllTransactions(): array
+    {
+        return $this->createQueryBuilder('t')
+            ->orderBy('t.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
 
     //    /**
     //     * @return Transaction[] Returns an array of Transaction objects

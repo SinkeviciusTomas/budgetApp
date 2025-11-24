@@ -1,175 +1,186 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            padding: 30px;
-            background-color: #f9f9f9;
-            display: compact;
-            flex-direction: row-reverse;
-            align-items: center;
-            gap: 30px;
-        }
+    <div class="min-h-screen bg-gray-50 font-sans grid grid-cols-3 grid-rows-2 gap-6 p-8">
 
-        .budget-box, .form-box {
-            max-width: 600px;
-            width: 100%;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
-            padding: 20px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
-            background-color: #ffffff;
-        }
-
-        .budget-box h2, .form-box h2 {
-            margin: 0 0 15px;
-            font-size: 20px;
-            color: #333;
-            text-align: center;
-        }
-
-        form div {
-            margin-bottom: 12px;
-        }
-
-        form label {
-            font-weight: 500;
-            display: block;
-            margin-bottom: 4px;
-            color: #444;
-        }
-
-        form input, form select {
-            width: 50%;
-            padding: 6px 8px;
-            font-size: 14px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        form button {
-            margin-top: 10px;
-            padding: 8px 12px;
-            font-size: 14px;
-            background-color: #b57575;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-
-        th {
-            text-align: left;
-            color: #666;
-            padding: 8px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        td {
-            padding: 8px 0;
-            color: #111;
-            vertical-align: middle;
-        }
-
-        tr + tr td {
-            border-top: 1px solid #f3f3f3;
-        }
-
-        .tag {
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 500;
-            display: inline-block;
-        }
-
-        .tag.income {
-            background-color: #d4f4dd;
-            color: #2e7d32;
-        }
-
-        .tag.expense {
-            background-color: #fdecea;
-            color: #c62828;
-        }
-
-        .tag.unknown {
-            background-color: #eee;
-            color: #777;
-        }
-
-        .filters {
-            margin-bottom: 15px;
-            font-size: 13px;
-            color: #555;
-        }
-    </style>
-
-    <div class="form-box">
-        <h2>Add Transaction</h2>
-        {{ form_start(form) }}
-        {{ form_row(form.mainType) }}
-        {{ form_row(form.category) }}
-        {{ form_row(form.amount) }}
-        {{ form_row(form.description) }}
-        {{ form_row(form.date) }}
-        <button type="submit">Add</button>
-        {{ form_end(form) }}
-    </div>
-
-    <div class="budget-box">
-        <h2>Recent Transactions</h2>
-        <div class="filters">
-            Showing last {{ recentTransactions|length }} transactions
+        <!-- Block 1 -->
+        <div class="bg-white border border-gray-200 rounded-lg shadow p-6 flex items-center justify-center">
+            <span class="text-gray-500">Block 1</span>
         </div>
-        <table>
-            <thead>
-            <tr>
-                <th>Type</th>
-                <th>Description</th>
-                <th>Amount</th>
-                <th>Date</th>
-                <th>Info</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for transaction in recentTransactions %}
-                <tr>
-                    <td>
-                        {% if transaction.mainType == 'income' %}
-                                <span class="tag income">Income</span>
-                        {% elseif transaction.mainType == 'expense' %}
-                                <span class="tag expense">Expense</span>
-                        {% else %}
-                                <span class="tag unknown">Not classified</span>
-                        {% endif %}
-                    </td>
-                    <td>{{ transaction.category }}</td>
-                    <td>{{ transaction.amount }} €</td>
-                    <td>{{ transaction.date|date('Y-m-d') }}</td>
-                    <td>
-                        {% if transaction.mainType == 'income' %}
-                            <a href="{{ path('income_show', { id: transaction.sourceId }) }}">View</a>
-                        {% elseif transaction.mainType == 'expense' %}
-                            <a href="{{ path('expense_show', { id: transaction.sourceId }) }}">View</a>
-                        {% else %}
-                            N/A
-                        {% endif %}
-                    </td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="4">No transactions yet.</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+
+        <!-- Block 2 -->
+        <div class="bg-white border border-gray-200 rounded-lg shadow p-6 flex flex-col justify-center">
+            <h2 class="text-xl font-semibold text-center text-gray-800 mb-6">Add Transaction</h2>
+
+            {{ form_start(form, { attr: { class: 'space-y-4', novalidate: 'novalidate' } }) }}
+
+            <div>
+                {{ form_label(form.mainType, null, { label_attr: { class: 'block font-medium text-gray-700 mb-1' } }) }}
+                {{ form_widget(form.mainType, { attr: { class: 'w-full border border-gray-300 rounded-md p-2 focus:ring focus:ring-indigo-200' } }) }}
+                <div class="text-red-600 text-sm mt-1">
+                    {{ form_errors(form.mainType) }}
+                </div>
+            </div>
+
+            <div>
+                {{ form_label(form.category, null, { label_attr: { class: 'block font-medium text-gray-700 mb-1' } }) }}
+                {{ form_widget(form.category, { attr: { class: 'w-full border border-gray-300 rounded-md p-2 focus:ring focus:ring-indigo-200' } }) }}
+                <div class="text-red-600 text-sm mt-1">
+                    {{ form_errors(form.category) }}
+                </div>
+            </div>
+
+            <div>
+                {{ form_label(form.amount, null, { label_attr: { class: 'block font-medium text-gray-700 mb-1' } }) }}
+                {{ form_widget(form.amount, { attr: { class: 'w-full border border-gray-300 rounded-md p-2 focus:ring focus:ring-indigo-200' } }) }}
+                <div class="text-red-600 text-sm mt-1">
+                    {{ form_errors(form.amount) }}
+                </div>
+            </div>
+
+            <div>
+                {{ form_label(form.description, null, { label_attr: { class: 'block font-medium text-gray-700 mb-1' } }) }}
+                {{ form_widget(form.description, { attr: { class: 'w-full border border-gray-300 rounded-md p-2 focus:ring focus:ring-indigo-200' } }) }}
+                <div class="text-red-600 text-sm mt-1">
+                    {{ form_errors(form.description) }}
+                </div>
+            </div>
+
+            <div>
+                {{ form_label(form.date, null, { label_attr: { class: 'block font-medium text-gray-700 mb-1' } }) }}
+                {{ form_widget(form.date, { attr: { class: 'w-full border border-gray-300 rounded-md p-2 focus:ring focus:ring-indigo-200' } }) }}
+            </div>
+
+            <button type="submit"
+                    class="w-full bg-rose-400 text-white py-2 rounded-md hover:bg-rose-500 transition">
+                Add
+            </button>
+
+            {{ form_end(form) }}
+        </div>
+
+        <!-- Block 3 -->
+        <div class="bg-white border border-gray-200 rounded-lg shadow p-6 flex flex-col">
+            <h2 class="text-xl font-semibold text-center text-gray-800 mb-4">Recently Added Transactions</h2>
+
+            <div class="text-sm text-gray-600 mb-4">
+                Showing last {{ recentTransactions|length }} transactions
+            </div>
+
+            <div class="overflow-y-auto">
+                <table class="w-full border-collapse text-sm">
+                    <thead>
+                    <tr class="border-b border-gray-200 text-gray-600 text-center">
+                        <th class="py-2">Type</th>
+                        <th class="py-2">Category</th>
+                        <th class="py-2">Amount</th>
+                        <th class="py-2">Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for transaction in recentTransactions %}
+                        <tr
+                            class="border-t border-gray-100 text-center cursor-pointer hover:bg-gray-100 transition"
+                            data-href="{{ path('transaction_show', { id: transaction.id }) }}"
+                        >
+                            <td class="py-2">
+                                {% if transaction.mainType == 'income' %}
+                                    <span class="px-2 py-1 rounded text-xs font-semibold bg-green-100 text-green-700">Income</span>
+                                {% elseif transaction.mainType == 'expense' %}
+                                    <span class="px-2 py-1 rounded text-xs font-semibold bg-red-100 text-red-700">Expense</span>
+                                {% else %}
+                                    <span class="px-2 py-1 rounded text-xs font-semibold bg-gray-200 text-gray-700">Not classified</span>
+                                {% endif %}
+                            </td>
+                            <td class="py-2">{{ transaction.category }}</td>
+                            <td class="py-2">{{ transaction.amount }} €</td>
+                            <td class="py-2">{{ transaction.date|date('Y-m-d') }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="py-4 text-center text-gray-500">No transactions yet.</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Block 4 -->
+        <div class="bg-white border border-gray-200 rounded-lg shadow p-6 flex items-center justify-center">
+
+        </div>
+
+        <!-- Block 5 -->
+        <div class="bg-white border border-gray-200 rounded-lg shadow p-6 flex items-center justify-center">
+            <span class="text-gray-500">Block 5</span>
+        </div>
+
+        <!-- Block 6 -->
+        <div class="bg-white border border-gray-200 rounded-lg shadow p-6 flex items-center justify-center">
+            <span class="text-gray-500">Block 6</span>
+        </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // === Category enable/disable logic ===
+            const mainTypeField = document.getElementById('transaction_mainType');
+            const categoryField = document.getElementById('transaction_category');
+
+            const categories = {
+                income: [
+                    {label: 'Salary', value: 'Salary'},
+                    {label: 'Gift', value: 'Gift'},
+                    {label: 'Invoice', value: 'Invoice'}
+                ],
+                expense: [
+                    {label: 'Rent', value: 'Rent'},
+                    {label: 'Groceries', value: 'Groceries'},
+                    {label: 'Transport', value: 'Transport'}
+                ]
+            };
+
+            categoryField.disabled = true;
+
+            function updateCategoryOptions(selectedType) {
+                categoryField.innerHTML = '';
+
+                const placeholder = document.createElement('option');
+                placeholder.disabled = true;
+                placeholder.selected = true;
+                placeholder.textContent = 'Choose category';
+                categoryField.appendChild(placeholder);
+
+                if (!selectedType) {
+                    categoryField.disabled = true;
+                    return;
+                }
+
+                categoryField.disabled = false;
+
+                categories[selectedType]?.forEach(opt => {
+                    const option = document.createElement('option');
+                    option.value = opt.value;
+                    option.textContent = opt.label;
+                    categoryField.appendChild(option);
+                });
+            }
+
+            mainTypeField.addEventListener('change', function () {
+                updateCategoryOptions(this.value);
+            });
+
+            updateCategoryOptions(mainTypeField.value);
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('tr[data-href]').forEach(row => {
+                row.addEventListener('click', () => {
+                    window.location.href = row.dataset.href;
+                });
+            });
+        });
+    </script>
+
 {% endblock %}

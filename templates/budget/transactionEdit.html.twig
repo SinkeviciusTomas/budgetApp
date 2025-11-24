@@ -1,0 +1,120 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="min-h-screen bg-gray-50 font-sans p-12 flex justify-center items-center">
+        <div class="bg-white border border-gray-200 rounded-xl shadow-2xl p-12 w-full max-w-4xl">
+
+            <h1 class="text-4xl font-bold text-gray-800 mb-10 text-center">
+                Edit Transaction
+            </h1>
+
+            {{ form_start(form, { attr: { novalidate: 'novalidate' } }) }}
+
+            <table class="w-full text-lg text-left text-gray-700">
+                <tbody>
+                <tr class="border-b border-gray-100">
+                    <th class="py-4 pr-6 font-semibold text-gray-600 w-1/4">Amount</th>
+                    <td class="py-4 text-gray-800 text-lg">
+                        {{ form_widget(form.amount, { attr: { class: 'w-full border border-gray-300 rounded-md p-2' } }) }}
+                        <div class="text-red-600 text-sm mt-1">{{ form_errors(form.amount) }}</div>
+                    </td>
+                </tr>
+                <tr class="border-b border-gray-100">
+                    <th class="py-4 pr-6 font-semibold text-gray-600">Description</th>
+                    <td class="py-4 text-gray-800 text-lg">
+                        {{ form_widget(form.description, { attr: { class: 'w-full border border-gray-300 rounded-md p-2' } }) }}
+                        <div class="text-red-600 text-sm mt-1">{{ form_errors(form.description) }}</div>
+                    </td>
+                </tr>
+                <tr class="border-b border-gray-100">
+                    <th class="py-4 pr-6 font-semibold text-gray-600">Category</th>
+                    <td class="py-4 text-gray-800 text-lg">
+                        {{ form_widget(form.category, { attr: { class: 'w-full border border-gray-300 rounded-md p-2' } }) }}
+                        <div class="text-red-600 text-sm mt-1">{{ form_errors(form.category) }}</div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="py-4 pr-6 font-semibold text-gray-600">Date</th>
+                    <td class="py-4 text-gray-800 text-lg">
+                        {{ form_widget(form.date, { attr: { class: 'w-full border border-gray-300 rounded-md p-2' } }) }}
+                        <div class="text-red-600 text-sm mt-1">{{ form_errors(form.date) }}</div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="py-4 pr-6 font-semibold text-gray-600">Type</th>
+                    <td class="py-4 text-gray-800 text-lg">
+                        {{ form_widget(form.mainType, { attr: { class: 'w-full border border-gray-300 rounded-md p-2' } }) }}
+                        <div class="text-red-600 text-sm mt-1">{{ form_errors(form.mainType) }}</div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="mt-12 text-center">
+                <button type="submit"
+                        class="bg-green-600 text-white text-lg px-6 py-3 rounded-lg hover:bg-green-700 transition">
+                    Save
+                </button>
+                <a href="{{ path('transaction_show', { id: transaction.id }) }}"
+                   class="ml-4 inline-block bg-gray-100 hover:bg-gray-200 text-gray-700 px-5 py-2 rounded-md transition">
+                    Cancel
+                </a>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // === Category enable/disable logic ===
+            const mainTypeField = document.getElementById('transaction_mainType');
+            const categoryField = document.getElementById('transaction_category');
+
+            const categories = {
+                income: [
+                    {label: 'Salary', value: 'Salary'},
+                    {label: 'Gift', value: 'Gift'},
+                    {label: 'Invoice', value: 'Invoice'}
+                ],
+                expense: [
+                    {label: 'Rent', value: 'Rent'},
+                    {label: 'Groceries', value: 'Groceries'},
+                    {label: 'Transport', value: 'Transport'}
+                ]
+            };
+
+            categoryField.disabled = true;
+
+            function updateCategoryOptions(selectedType) {
+                categoryField.innerHTML = '';
+
+                const placeholder = document.createElement('option');
+                placeholder.disabled = true;
+                placeholder.selected = true;
+                placeholder.textContent = 'Choose category';
+                categoryField.appendChild(placeholder);
+
+                if (!selectedType) {
+                    categoryField.disabled = true;
+                    return;
+                }
+
+                categoryField.disabled = false;
+
+                categories[selectedType]?.forEach(opt => {
+                    const option = document.createElement('option');
+                    option.value = opt.value;
+                    option.textContent = opt.label;
+                    categoryField.appendChild(option);
+                });
+            }
+
+            mainTypeField.addEventListener('change', function () {
+                updateCategoryOptions(this.value);
+            });
+
+            updateCategoryOptions(mainTypeField.value);
+        });
+    </script>
+{% endblock %}

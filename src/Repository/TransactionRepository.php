@@ -16,6 +16,16 @@ class TransactionRepository extends ServiceEntityRepository
         parent::__construct($registry, Transaction::class);
     }
 
+    public function recentTransactions(int $limit): array
+    {
+        return $this->createQueryBuilder('t')
+            ->orderBy('t.date', 'DESC')
+            ->addOrderBy('t.id', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Transaction[] Returns an array of Transaction objects
     //     */

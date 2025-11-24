@@ -8,3 +8,8 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+
+###> symfony/asset-mapper ###
+/assets/
+/assets/vendor/
+###< symfony/asset-mapper ###

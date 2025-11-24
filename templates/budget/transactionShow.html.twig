@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="min-h-screen bg-gray-50 font-sans p-12 flex justify-center items-center">
+        <div class="relative bg-white border border-gray-200 rounded-xl shadow-2xl p-12 w-full max-w-4xl">
+            <!-- Edit/Delete buttons -->
+            <div class="absolute top-6 right-6 flex space-x-3">
+                <a href="{{ path('transaction_edit', {'id': transaction.id}) }}"
+                   class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-md transition">
+                    Edit
+                </a>
+                <form method="post" action="{{ path('transaction_delete', {'id': transaction.id}) }}" onsubmit="return confirm('Are you sure you want to delete this transaction?');">
+                    <button type="submit"
+                            class="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-md transition">
+                        Delete
+                    </button>
+                </form>
+            </div>
+
+            <h1 class="text-4xl font-bold text-gray-800  text-center">
+                {% if transaction.mainType == 'income' %}
+                    <span class="text-green-600">Income</span>
+                {% elseif transaction.mainType == 'expense' %}
+                    <span class="text-red-600">Expense</span>
+                {% else %}
+                    <span class="text-gray-600">Transaction</span>
+                {% endif %}
+            </h1>
+            <table class="w-full text-lg text-left text-gray-700">
+                <tbody>
+                <tr class="border-b border-gray-100">
+                    <th class="py-4 pr-6 font-semibold text-gray-600 w-1/4">Amount</th>
+                    <td class="py-4 text-gray-800 font-bold text-xl">{{ transaction.amount }} €</td>
+                </tr>
+                <tr class="border-b border-gray-100">
+                    <th class="py-4 pr-6 font-semibold text-gray-600">Description</th>
+                    <td class="py-4 text-gray-800 text-lg">
+                        {{ transaction.description is not empty ? transaction.description : '—' }}
+                    </td>
+                </tr>
+                <tr class="border-b border-gray-100">
+                    <th class="py-4 pr-6 font-semibold text-gray-600">Category</th>
+                    <td class="py-4 text-gray-800 text-lg">{{ transaction.category }}</td>
+                </tr>
+                <tr>
+                    <th class="py-4 pr-6 font-semibold text-gray-600">Date</th>
+                    <td class="py-4 text-gray-800 text-lg">{{ transaction.date|date('Y-m-d') }}</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="mt-12 text-center">
+                <a href="{{ path('transaction_main') }}"
+                   class="inline-block bg-indigo-600 text-white text-lg px-6 py-3 rounded-lg hover:bg-indigo-700 transition">
+                    Back
+                </a>
+{#                <a href="{{ path('transaction_edit', {'id': transaction.id}) }}"#}
+{#                   class="inline-block bg-indigo-600 text-white text-lg px-6 py-3 rounded-lg hover:bg-indigo-700 transition">#}
+{#                    Edit#}
+{#                </a>#}
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}

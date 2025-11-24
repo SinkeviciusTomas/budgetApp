@@ -10,36 +10,34 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: '`transaction`')]
 class Transaction
 {
-
-    // TODO: Add validators to entities
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\Column(length: 20)]
+    #[Assert\Type('string')]
+    #[Assert\NotBlank(message: 'Please choose the transaction type')]
     private ?string $mainType = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\Type('string')]
+    #[Assert\NotBlank(message: 'Please choose the category')]
     private ?string $category = null;
 
     #[ORM\Column]
-    #[Assert\NotBlank]
-    #[Assert\Positive]
-    #[Assert\Type("integer")]
+    #[Assert\NotBlank(message: 'Please input amount')]
+    #[Assert\Positive(message: 'The amount cannot be negative or 0.')]
+    #[Assert\Type("float")]
     private ?float $amount = null;
 
     #[ORM\Column(length: 128, nullable: true)]
+    #[Assert\Type('string')]
+    #[Assert\Length(min: 0, max: 128, maxMessage: 'The description can not be more than 128 characters')]
     private ?string $description = null;
 
     #[ORM\Column(type: 'datetime')]
     private ?\DateTime $date = null;
-
-    #[ORM\Column(length: 20)]
-    private ?string $sourceTable = null;
-
-    #[ORM\Column]
-    private ?int $sourceId = null;
 
     public function getId(): ?int
     {
@@ -106,27 +104,4 @@ class Transaction
         return $this;
     }
 
-    public function getSourceTable(): ?string
-    {
-        return $this->sourceTable;
-    }
-
-    public function setSourceTable(string $sourceTable): static
-    {
-        $this->sourceTable = $sourceTable;
-
-        return $this;
-    }
-
-    public function getSourceId(): ?int
-    {
-        return $this->sourceId;
-    }
-
-    public function setSourceId(int $sourceId): static
-    {
-        $this->sourceId = $sourceId;
-
-        return $this;
-    }
 }

@@ -25,7 +25,7 @@ class TransactionRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-    public function findAllTransactions(string $transaction): array
+    public function transactionsCurrentMonth(string $transaction): array
     {
         $start = (new \DateTime('first day of this month'));
 

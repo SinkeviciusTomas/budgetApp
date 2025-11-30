@@ -8,6 +8,7 @@ namespace App\Controller;
 use App\Entity\Transaction;
 use App\Form\Type\TransactionType;
 use App\Repository\TransactionRepository;
+use App\Service\TransactionCalculations;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,16 +22,17 @@ final class BudgetController extends AbstractController
         private readonly TransactionRepository $tr
     ){}
     #[Route('/', name: 'transaction_main')]
-    public function index(Request $request): Response
+    public function index(Request $request, TransactionCalculations $calculations): Response
     {
         $recentTransactions = $this->tr->recentTransactions(10);
-        $incomes = $this->tr->findAllTransactions('income');
-        $expenses = $this->tr->findAllTransactions('expense');
-
-        $totalIncome = 0.0;
-        foreach ($incomes as $t) {
-            $totalIncome += $t->getAmount();
-        }
+        $totalIncome = $calculations->getTotals('income');
+//        $incomes = $this->tr->transactionsCurrentMonth('income');
+//        $expenses = $this->tr->transactionsCurrentMonth('expense');
+//
+//        $totalIncome = 0.0;
+//        foreach ($incomes as $t) {
+//            $totalIncome += $t->getAmount();
+//        }
 
 //        dd($incomes);
         $transaction = new Transaction();
@@ -48,8 +50,9 @@ final class BudgetController extends AbstractController
         return $this->render('budget/index.html.twig', [
             'recentTransactions' => $recentTransactions,
             'form' => $form->createView(),
-            'incomes' => $totalIncome,
-            'expenses' => $expenses,
+            'totalIncome' => $totalIncome,
+//            'incomes' => $totalIncome,
+//            'expenses' => $expenses,
         ]);
     }
     #[Route('/transaction/{id<\d+>}', name: 'transaction_show')]

@@ -108,6 +108,12 @@
 
         <!-- Block 4 -->
         <div class="bg-white border border-gray-200 rounded-lg shadow p-6 flex items-center justify-center">
+            <div>
+                <h2 class="text-lg font-semibold text-gray-700 mb-2">Income This Month</h2>
+                <p class="text-3xl font-bold text-green-600">
+                    {{ incomes|number_format(2, '.', ' ') }} €
+                </p>
+            </div>
 
         </div>
 

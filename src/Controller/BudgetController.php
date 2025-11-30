@@ -16,19 +16,31 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class BudgetController extends AbstractController
 {
+    public function __construct(
+        private readonly EntityManagerInterface $em,
+        private readonly TransactionRepository $tr
+    ){}
     #[Route('/', name: 'transaction_main')]
-    public function index(Request $request, EntityManagerInterface $em, TransactionRepository $transactionRepository): Response
+    public function index(Request $request): Response
     {
-        $recentTransactions = $transactionRepository->recentTransactions(10);
+        $recentTransactions = $this->tr->recentTransactions(10);
+        $incomes = $this->tr->findAllTransactions('income');
+        $expenses = $this->tr->findAllTransactions('expense');
 
+        $totalIncome = 0.0;
+        foreach ($incomes as $t) {
+            $totalIncome += $t->getAmount();
+        }
+
+//        dd($incomes);
         $transaction = new Transaction();
         $form = $this->createForm(transactionType::class, $transaction);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $em->persist($transaction);
-            $em->flush();
+            $this->em->persist($transaction);
+            $this->em->flush();
 
             return $this->redirectToRoute('transaction_main');
         }
@@ -36,20 +48,19 @@ final class BudgetController extends AbstractController
         return $this->render('budget/index.html.twig', [
             'recentTransactions' => $recentTransactions,
             'form' => $form->createView(),
+            'incomes' => $totalIncome,
+            'expenses' => $expenses,
         ]);
     }
     #[Route('/transaction/{id<\d+>}', name: 'transaction_show')]
-    public function transactionShow(Transaction $transaction, TransactionRepository $transactionRepository): Response
+    public function transactionShow(Transaction $transaction): Response
     {
-        $transaction = $transactionRepository->findOneBy([
-            'id' => $transaction->getId()
-        ]);
        return $this->render('budget/transactionShow.html.twig', [
            'transaction' => $transaction,
        ]);
     }
     #[Route('/transaction/{id<\d+>}/edit', name: 'transaction_edit')]
-    public function editTransaction(Transaction $transaction, Request $request, EntityManagerInterface $em, TransactionRepository $transactionRepository): Response
+    public function editTransaction(Transaction $transaction, Request $request): Response
     {
         $form = $this->createForm(transactionType::class, $transaction);
 
@@ -57,7 +68,7 @@ final class BudgetController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $em->flush();
+            $this->em->flush();
 
             return $this->redirectToRoute('transaction_show', ['id' => $transaction->getId()]);
         }
@@ -68,18 +79,15 @@ final class BudgetController extends AbstractController
         ]);
     }
     #[Route('/transaction/{id}/', name: 'transaction_delete', methods: ['POST'])]
-    public function deleteTransaction(int $id, Request $request, EntityManagerInterface $em, TransactionRepository $transactionRepository): Response
+    public function deleteTransaction(Transaction $transaction, Request $request): Response
     {
-        $transaction = $transactionRepository->find($id);
-
         if ($request->isMethod('POST')) {
 
-            $em->remove($transaction);
-            $em->flush();
+            $this->em->remove($transaction);
+            $this->em->flush();
 
             return $this->redirectToRoute('transaction_main');
         };
-
 
         return $this->render('budget/index.html.twig', []);
     }

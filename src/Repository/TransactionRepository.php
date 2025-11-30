@@ -25,10 +25,18 @@ class TransactionRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-    public function findAllTransactions(): array
+    public function findAllTransactions(string $transaction): array
     {
+        $start = (new \DateTime('first day of this month'));
+
+        $end = (new \DateTime('last day of this month'));
+
         return $this->createQueryBuilder('t')
-            ->orderBy('t.id', 'ASC')
+            ->andWhere('t.mainType = :type')
+            ->setParameter('type', $transaction)
+            ->andWhere('t.date BETWEEN :start AND :end')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
             ->getQuery()
             ->getResult();
     }

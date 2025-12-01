@@ -6,9 +6,6 @@ use App\Entity\Transaction;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @extends ServiceEntityRepository<Transaction>
- */
 class TransactionRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -16,7 +13,7 @@ class TransactionRepository extends ServiceEntityRepository
         parent::__construct($registry, Transaction::class);
     }
 
-    public function recentTransactions(int $limit): array
+    public function findRecentTransactions(int $limit): array
     {
         return $this->createQueryBuilder('t')
             ->orderBy('t.date', 'DESC')
@@ -25,11 +22,12 @@ class TransactionRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-    public function transactionsCurrentMonth(string $transaction): array
-    {
-        $start = (new \DateTime('first day of this month'));
 
-        $end = (new \DateTime('last day of this month'));
+    public function findCurrentMonthTransactionsByType(string $transaction): array
+    {
+        $start = (new \DateTime('first day of this month'))->setTime(0, 0, 0);
+
+        $end = (new \DateTime('last day of this month'))->setTime(23, 59, 59);
 
         return $this->createQueryBuilder('t')
             ->andWhere('t.mainType = :type')
@@ -40,7 +38,6 @@ class TransactionRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-
 
     //    /**
     //     * @return Transaction[] Returns an array of Transaction objects

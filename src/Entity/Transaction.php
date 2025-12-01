@@ -19,7 +19,7 @@ class Transaction
     #[ORM\Column(length: 20)]
     #[Assert\Type('string')]
     #[Assert\NotBlank(message: 'Please choose the transaction type')]
-    #[SerializedName("transaction type")]
+    #[SerializedName('transaction type')]
     private ?string $mainType = null;
 
     #[ORM\Column(length: 50)]
@@ -30,7 +30,7 @@ class Transaction
     #[ORM\Column]
     #[Assert\NotBlank(message: 'Please input amount')]
     #[Assert\Positive(message: 'The amount cannot be negative or 0.')]
-    #[Assert\Type("float")]
+    #[Assert\Type('float')]
     private ?float $amount = null;
 
     #[ORM\Column(length: 128, nullable: true)]
@@ -105,5 +105,4 @@ class Transaction
 
         return $this;
     }
-
 }

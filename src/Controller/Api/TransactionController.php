@@ -8,20 +8,26 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-
 
 final class TransactionController extends AbstractController
 {
-    #[Route('/api/transactions', name: 'app_api_transaction', methods: ['GET'])]
-    public function index(EntityManagerInterface $em, SerializerInterface $serializer): JsonResponse
-    {
-        $transactions = $em->getRepository(Transaction::class)->findAll();
+    public function __construct(
+        private readonly EntityManagerInterface $em,
+        private readonly SerializerInterface $serializer,
+        private readonly ValidatorInterface $validator,
+    ) {
+    }
 
-        $json_content = $serializer->serialize($transactions, 'json', [
-            ObjectNormalizer::IGNORED_ATTRIBUTES => ['id']
+    #[Route('/api/transactions', name: 'app_api_transaction', methods: ['GET'])]
+    public function index(): JsonResponse
+    {
+        $transactions = $this->em->getRepository(Transaction::class)->findAll();
+
+        $json_content = $this->serializer->serialize($transactions, 'json', [
+            ObjectNormalizer::IGNORED_ATTRIBUTES => ['id'],
         ]);
 
         return JsonResponse::fromJsonString($json_content);
@@ -34,22 +40,19 @@ final class TransactionController extends AbstractController
     }
 
     #[Route('/api/transactions', methods: ['POST'])]
-    public function create(Request $request,
-                           EntityManagerInterface $em,
-                           SerializerInterface $serializer,
-                           ValidatorInterface $validator): JsonResponse
+    public function create(Request $request): JsonResponse
     {
         $content = $request->getContent();
 
-        $data = $serializer->deserialize($content, Transaction::class, 'json');
+        $data = $this->serializer->deserialize($content, Transaction::class, 'json');
 
-        $errors = $validator->validate($data);
+        $errors = $this->validator->validate($data);
 
         if (count($errors) > 0) {
-            return $this->json(['errors' =>$errors], 422);
+            return $this->json(['errors' => $errors], 422);
         }
-        $em->persist($data);
-        $em->flush();
+        $this->em->persist($data);
+        $this->em->flush();
 
         return $this->json($data, 201);
     }

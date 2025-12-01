@@ -17,31 +17,29 @@ class TransactionType extends AbstractType
     {
         $builder
             ->add('mainType', ChoiceType::class, [
-                'choices' =>
-                    [
+                'choices' => [
                     'Income' => 'income',
                     'Expense' => 'expense',
-                    ],
-                    'multiple' => false,
-                    'placeholder' => 'Choose type',
-                    'required' => true,
-                    'attr' => ['id' => 'mainType'],
+                ],
+                'multiple' => false,
+                'placeholder' => 'Choose type',
+                'required' => true,
+                'attr' => ['id' => 'mainType'],
             ])
             ->add('category', ChoiceType::class, [
-                'choices' =>
-                    [
+                'choices' => [
                     'Salary' => 'Salary',
                     'Gift' => 'Gift',
                     'Invoice' => 'Invoice',
                     'Rent' => 'Rent',
                     'Groceries' => 'Groceries',
                     'Transport' => 'Transport',
-                     ],
-                    'placeholder' => 'Choose category',
-                    'required' => true,
-                    'attr' => ['id' => 'category'],
+                ],
+                'placeholder' => 'Choose category',
+                'required' => true,
+                'attr' => ['id' => 'category'],
             ])
-            ->add('amount', NumberType::class,[
+            ->add('amount', NumberType::class, [
                 'required' => true,
                 'attr' => [
                     'min' => 0.01,
@@ -56,9 +54,7 @@ class TransactionType extends AbstractType
                 'widget' => 'single_text',
                 'data' => new \DateTime(),
             ]);
-
     }
-
 
     public function configureOptions(OptionsResolver $resolver): void
     {

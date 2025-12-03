@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\MainType;
 use App\Repository\TransactionRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\SerializedName;
@@ -16,11 +17,10 @@ class Transaction
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 20)]
-    #[Assert\Type('string')]
+    #[ORM\Column(enumType: MainType::class)]
     #[Assert\NotBlank(message: 'Please choose the transaction type')]
     #[SerializedName('transaction type')]
-    private ?string $mainType = null;
+    private ?MainType $mainType = null;
 
     #[ORM\Column(length: 50)]
     #[Assert\Type('string')]
@@ -46,12 +46,12 @@ class Transaction
         return $this->id;
     }
 
-    public function getMainType(): ?string
+    public function getMainType(): ?MainType
     {
         return $this->mainType;
     }
 
-    public function setMainType(string $mainType): static
+    public function setMainType(MainType $mainType): self
     {
         $this->mainType = $mainType;
 

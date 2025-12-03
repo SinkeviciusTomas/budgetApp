@@ -3,9 +3,11 @@
 namespace App\Form\Type;
 
 use App\Entity\Transaction;
+use App\Enum\MainType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,11 +18,7 @@ class TransactionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('mainType', ChoiceType::class, [
-                'choices' => [
-                    'Income' => 'income',
-                    'Expense' => 'expense',
-                ],
+            ->add('mainType', EnumType::class, ['class' => MainType::class,
                 'multiple' => false,
                 'placeholder' => 'Choose type',
                 'required' => true,

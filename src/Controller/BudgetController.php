@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Transaction;
+use App\Enum\MainType;
 use App\Form\Type\TransactionType;
 use App\Repository\TransactionRepository;
 use App\Service\TransactionCalculations;
@@ -18,16 +19,16 @@ final class BudgetController extends AbstractController
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly TransactionRepository $tr,
+        private readonly TransactionRepository $transactionRepository,
     ) {
     }
 
     #[Route('/', name: 'transaction_main')]
     public function index(Request $request, TransactionCalculations $calculations): Response
     {
-        $recentTransactions = $this->tr->findRecentTransactions(10);
-        $incomes = $this->tr->findCurrentMonthTransactionsByType('income');
-        $expenses = $this->tr->findCurrentMonthTransactionsByType('expense');
+        $recentTransactions = $this->transactionRepository->findRecentTransactions(10);
+        $incomes = $this->transactionRepository->findCurrentMonthTransactionsByType(MainType::Income);
+        $expenses = $this->transactionRepository->findCurrentMonthTransactionsByType(MainType::Expense);
         $totalIncome = $calculations->getTransactionTotalByMainType($incomes);
         $totalExpense = $calculations->getTransactionTotalByMainType($expenses);
 

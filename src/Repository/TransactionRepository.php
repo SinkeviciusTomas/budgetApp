@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Transaction;
+use App\Enum\MainType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -23,7 +24,7 @@ class TransactionRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findCurrentMonthTransactionsByType(string $transaction): array
+    public function findCurrentMonthTransactionsByType(MainType $transaction): array
     {
         $start = (new \DateTime('first day of this month'))->setTime(0, 0, 0);
 

@@ -1,11 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="min-h-screen bg-gray-50 font-sans grid grid-cols-3 grid-rows-2 gap-6 p-8">
+    <div class="bg-gray-50 font-sans grid grid-cols-3 grid-rows-2 auto-rows-fr gap-6 p-8">
 
         <!-- Block 1 Generate report block-->
         <div class="bg-white border border-gray-200 rounded-lg shadow p-6 flex items-center justify-center">
-            <span class="text-gray-500">REPORT</span>
+            <a href="{{ path('transaction_report') }}"
+               class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-md transition">
+                Report
+            </a>
         </div>
 
         <!-- Block 2 Input form-->
@@ -108,7 +111,7 @@
 
         <!-- Block 4 Data about incomes/expenses-->
         <div class="bg-white border border-gray-200 rounded-lg shadow p-6">
-            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 w-full">
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 w-full">
 
                 <!-- Card 1: Total income -->
                 <div class="border border-gray-200 rounded-lg px-4 py-3 flex flex-col items-center justify-center">
@@ -139,34 +142,23 @@
                         {{ (totalIncome - totalExpense)|number_format(2, '.', ' ') }} €
                     </p>
                 </div>
-
-                <!-- Card 4: TBD -->
-                <div class="border border-gray-200 rounded-lg px-4 py-3 flex flex-col items-center justify-center">
-                    <p class="text-sm font-medium text-gray-600 text-center">
-                        TBD
-                    </p>
-                    <p class="mt-1 text-2xl font-bold text-gray-800 text-center">
-                    </p>
-                </div>
-
             </div>
         </div>
 
 
         <!-- Block 5 TBD -->
         <div class="bg-white border border-gray-200 rounded-lg shadow p-6 flex items-center justify-center">
-            <span class="text-gray-500">Block 5</span>
+            <span class="text-gray-500">TBA</span>
         </div>
 
         <!-- Block 6 TBD -->
         <div class="bg-white border border-gray-200 rounded-lg shadow p-6 flex items-center justify-center">
-            <span class="text-gray-500">Block 6</span>
+            <span class="text-gray-500">TBA</span>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // === Category enable/disable logic ===
             const mainTypeField = document.getElementById('transaction_mainType');
             const categoryField = document.getElementById('transaction_category');
 
@@ -183,37 +175,53 @@
                 ]
             };
 
-            categoryField.disabled = true;
+            function updateCategoryOptions(selectedType, preselectedValue = null) {
+                // Keep whatever was selected before we clear the options
+                const selectedCategory = preselectedValue ?? categoryField.value ?? '';
 
-            function updateCategoryOptions(selectedType) {
                 categoryField.innerHTML = '';
 
                 const placeholder = document.createElement('option');
                 placeholder.disabled = true;
-                placeholder.selected = true;
                 placeholder.textContent = 'Choose category';
                 categoryField.appendChild(placeholder);
 
                 if (!selectedType) {
+                    placeholder.selected = true;
                     categoryField.disabled = true;
                     return;
                 }
 
                 categoryField.disabled = false;
 
+                let foundSelected = false;
+
                 categories[selectedType]?.forEach(opt => {
                     const option = document.createElement('option');
                     option.value = opt.value;
                     option.textContent = opt.label;
+
+                    if (opt.value === selectedCategory) {
+                        option.selected = true;
+                        foundSelected = true;
+                    }
+
                     categoryField.appendChild(option);
                 });
+
+                // If we didn't find a matching selected option, keep the placeholder selected
+                if (!foundSelected) {
+                    placeholder.selected = true;
+                }
             }
 
-            mainTypeField.addEventListener('change', function () {
-                updateCategoryOptions(this.value);
-            });
+            const initialCategoryValue = categoryField.value;
+            updateCategoryOptions(mainTypeField.value, initialCategoryValue);
 
-            updateCategoryOptions(mainTypeField.value);
+            // On change of main type, we rebuild without forcing a preselected value
+            mainTypeField.addEventListener('change', function () {
+                updateCategoryOptions(this.value, null);
+            });
         });
 
         document.addEventListener('DOMContentLoaded', function () {

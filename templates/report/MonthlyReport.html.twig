@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="min-h-screen bg-gray-50 flex items-center justify-center font-sans">
+        <div class="bg-white border border-gray-200 rounded-lg shadow p-8 w-full max-w-5xl">
+
+            <h1 class="text-2xl font-semibold text-gray-800 text-center mb-2">
+                {{ title|default('All Transactions') }}
+            </h1>
+
+            <p class="text-sm text-gray-500 text-center mb-6">
+                Showing {{ transaction|length }} record{{ transaction|length == 1 ? '' : 's' }}
+            </p>
+
+            <form method="get" class="flex flex-col sm:flex-row items-center justify-center gap-3 mb-8">
+
+                <select name="year"
+                        class="border border-gray-300 rounded-md p-2 text-gray-700 focus:ring focus:ring-indigo-200">
+                    {% for y ,m in mappedDates %}
+                        <option value="{{ y }}" {{ year is defined and year == y ? 'selected' : '' }}>
+                            {{ y }}
+                        </option>
+                    {% endfor %}
+                </select>
+
+                <select name="month"
+                        class="border border-gray-300 rounded-md p-2 text-gray-700 focus:ring focus:ring-indigo-200">
+                    {% for y  in mappedDates[] %}
+                        <option value="{{ m }}" {{ month is defined and month == m ? 'selected' : '' }}>
+                            {{ m.value }}
+                        </option>
+                    {% endfor %}
+                </select>
+
+                <button type="submit"
+                        class="px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 transition shadow-sm">
+                    Filter
+                </button>
+
+            </form>
+
+            <div class="overflow-x-auto">
+                <table class="w-full border-collapse text-sm">
+                    <thead>
+                    <tr class="border-b border-gray-200 text-gray-600 text-center">
+                        <th class="py-2 px-2">Type</th>
+                        <th class="py-2 px-2">Category</th>
+                        <th class="py-2 px-2">Amount</th>
+                        <th class="py-2 px-2">Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for transaction in transaction %}
+                        <tr
+                            class="border-t border-gray-100 text-center cursor-pointer hover:bg-gray-100 transition"
+                            data-href="{{ path('transaction_show', { id: transaction.id }) }}"
+                        >
+                            <td class="py-2 px-2">
+                                {% if transaction.mainType.value == 'income' %}
+                                    <span class="px-2 py-1 rounded text-xs font-semibold bg-green-100 text-green-700">
+                                        Income
+                                    </span>
+                                {% elseif transaction.mainType.value == 'expense' %}
+                                    <span class="px-2 py-1 rounded text-xs font-semibold bg-red-100 text-red-700">
+                                        Expense
+                                    </span>
+                                {% else %}
+                                    <span class="px-2 py-1 rounded text-xs font-semibold bg-gray-200 text-gray-700">
+                                        Not classified
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="py-2 px-2">{{ transaction.category }}</td>
+                            <td class="py-2 px-2">{{ transaction.amount }} €</td>
+                            <td class="py-2 px-2">{{ transaction.date|date('Y-m-d') }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="py-4 text-center text-gray-500">No records found.</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

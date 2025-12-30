@@ -67,7 +67,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // === Category enable/disable logic ===
             const mainTypeField = document.getElementById('transaction_mainType');
             const categoryField = document.getElementById('transaction_category');
 
@@ -84,37 +83,59 @@
                 ]
             };
 
-            categoryField.disabled = true;
+            function updateCategoryOptions(selectedType, preselectedValue = null) {
+                // Keep whatever was selected before we clear the options
+                const selectedCategory = preselectedValue ?? categoryField.value ?? '';
 
-            function updateCategoryOptions(selectedType) {
                 categoryField.innerHTML = '';
 
                 const placeholder = document.createElement('option');
                 placeholder.disabled = true;
-                placeholder.selected = true;
                 placeholder.textContent = 'Choose category';
                 categoryField.appendChild(placeholder);
 
                 if (!selectedType) {
+                    placeholder.selected = true;
                     categoryField.disabled = true;
                     return;
                 }
 
                 categoryField.disabled = false;
 
+                let foundSelected = false;
+
                 categories[selectedType]?.forEach(opt => {
                     const option = document.createElement('option');
                     option.value = opt.value;
                     option.textContent = opt.label;
+
+                    if (opt.value === selectedCategory) {
+                        option.selected = true;
+                        foundSelected = true;
+                    }
+
                     categoryField.appendChild(option);
                 });
+
+                // If we didn't find a matching selected option, keep the placeholder selected
+                if (!foundSelected) {
+                    placeholder.selected = true;
+                }
             }
 
+            const initialCategoryValue = categoryField.value;
+            updateCategoryOptions(mainTypeField.value, initialCategoryValue);
             mainTypeField.addEventListener('change', function () {
-                updateCategoryOptions(this.value);
+                updateCategoryOptions(this.value, null);
             });
+        });
 
-            updateCategoryOptions(mainTypeField.value);
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('tr[data-href]').forEach(row => {
+                row.addEventListener('click', () => {
+                    window.location.href = row.dataset.href;
+                });
+            });
         });
     </script>
 {% endblock %}

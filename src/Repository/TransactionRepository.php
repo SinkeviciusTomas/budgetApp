@@ -40,6 +40,28 @@ class TransactionRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findGivenMonthTransactions(string $year, string $month): array
+    {
+        $start = new \DateTime("$year-$month-01 00:00:00");
+        $end = (clone $start)->modify('last day of this month 23:59:59');
+
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.date BETWEEN :start AND :end')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->orderBy('t.date', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findTransactionYearAndMonthList(): array
+    {
+        return $this->createQueryBuilder('t')
+            ->select('DISTINCT (t.date) as date')
+            ->orderBy('t.date', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
     //    /**
     //     * @return Transaction[] Returns an array of Transaction objects
     //     */

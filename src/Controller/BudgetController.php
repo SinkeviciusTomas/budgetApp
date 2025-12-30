@@ -9,6 +9,7 @@ use App\Enum\MainType;
 use App\Form\Type\TransactionType;
 use App\Repository\TransactionRepository;
 use App\Service\TransactionCalculations;
+use App\Service\YearMonthBuilder;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -89,5 +90,27 @@ final class BudgetController extends AbstractController
         }
 
         return $this->render('budget/index.html.twig', []);
+    }
+
+    #[Route('/report', name: 'transaction_report')]
+    public function monthlyReport(Request $request, YearMonthBuilder $yearMonthBuilder): Response
+    {
+        $year = $request->query->get('year');
+        $month = $request->query->get('month');
+
+        if (null == $month) {
+            $year = (new \DateTime())->format('Y');
+            $month = (new \DateTime())->format('m');
+        }
+        $transaction = $this->transactionRepository->findGivenMonthTransactions($year, $month);
+        $dates = $this->transactionRepository->findTransactionYearAndMonthList();
+        $mappedDates = $yearMonthBuilder->buildMonthYearMap($dates);
+
+        return $this->render('report/monthlyReport.html.twig', [
+            'transaction' => $transaction,
+            'mappedDates' => $mappedDates,
+            'year' => $year,
+            'month' => $month,
+        ]);
     }
 }

@@ -6,7 +6,6 @@ use App\Enum\MainType;
 use App\Repository\TransactionRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\SerializedName;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TransactionRepository::class)]
 #[ORM\Table(name: '`transaction`')]
@@ -18,24 +17,16 @@ class Transaction
     private ?int $id = null;
 
     #[ORM\Column(enumType: MainType::class)]
-    #[Assert\NotBlank(message: 'Please choose the transaction type')]
     #[SerializedName('transaction type')]
     private ?MainType $mainType = null;
 
     #[ORM\Column(length: 50)]
-    #[Assert\Type('string')]
-    #[Assert\NotBlank(message: 'Please choose the category')]
     private ?string $category = null;
 
     #[ORM\Column]
-    #[Assert\NotBlank(message: 'Please input amount')]
-    #[Assert\Positive(message: 'The amount cannot be negative or 0.')]
-    #[Assert\Type('float')]
     private ?float $amount = null;
 
     #[ORM\Column(length: 128, nullable: true)]
-    #[Assert\Type('string')]
-    #[Assert\Length(min: 0, max: 128, maxMessage: 'The description can not be more than 128 characters')]
     private ?string $description = null;
 
     #[ORM\Column(type: 'datetime')]
